@@ -92,12 +92,13 @@ if __name__ == "__main__":
                                   vid.get(cv2.CAP_PROP_FPS),
                                   (frame.shape[1], frame.shape[0]))
     num_frame = 0
+    init = True
     for number_label in range(1, total_frames):
         annot_list, frame, number_label = get_frame_annotation(annot_dir, annot_txt_list, data_type, number_label, None,
                                                                pattern_name, vid, field=None,
                                                                tracking=False)
         list_crop = get_cropped_detection(frame, annot_list)
-        tracker.update(frame, list_crop, annot_list)
+        tracker.update(list_crop, annot_list, number_label, init)
 
         for track in tracker.tracks:
             bbox = track.bbox
@@ -112,6 +113,7 @@ if __name__ == "__main__":
         else:
             cv2.imwrite(os.path.join(output_dir, "frame_" + str(num_frame) + ".jpg"), frame)
             num_frame += 1
+        init = None
     #
     # ret, frame = cap.read()
     # num_frame += 1

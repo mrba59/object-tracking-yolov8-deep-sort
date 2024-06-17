@@ -26,7 +26,7 @@ class Tracker:
         )
         #self.encoder = gdet.create_box_encoder(encoder_model_filename, batch_size=1)
 
-    def update(self, list_crop, detections, num_frame):
+    def update(self, list_crop, detections, num_frame, init):
         if len(detections) == 0:
             self.tracker.predict()
             self.tracker.update([])
@@ -34,14 +34,14 @@ class Tracker:
             return
         scores = [d[-1] for d in detections]
         features = self.encoder(list_crop)
-        bboxes = np.asarray([d[:-1] for d in detections])
+        bboxes = np.asarray([d[1:-1] for d in detections])
         bboxes[:, 2:] = bboxes[:, 2:] - bboxes[:, 0:2]
         dets = []
         for bbox_id, bbox in enumerate(bboxes):
             dets.append(Detection(bbox, scores[bbox_id], features[bbox_id]))
 
         self.tracker.predict()
-        if num_frame == 0:
+        if init:
             self.tracker.initialization(dets)
         else:
             self.tracker.update(dets)
