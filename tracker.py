@@ -12,7 +12,7 @@ class Tracker:
     tracks = None
 
     def __init__(self):
-        max_cosine_distance = 0.4
+        max_cosine_distance = 0.2
         nn_budget = None
 
         encoder_model_filename = '/home/reda/Documents/football_detection/deep-sort-tracking/mars-small128.pb'
